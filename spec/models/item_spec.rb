@@ -23,5 +23,4 @@ RSpec.describe Item, type: :model do
       expect(second_item.valid?).to eq false 
     end
   end
-  
 end
