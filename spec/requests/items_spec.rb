@@ -16,16 +16,32 @@ RSpec.describe ItemsController, type: :request do
   end
 
   describe "GET /show" do
-    let!(:item) { create :item }
+    context "when record exist" do
+      let!(:item) { create :item }
 
-    before { get "/items/#{item.id}" }
+      before { get "/items/#{item.id}" }
 
-    it "return status 200" do
-      expect(last_response.status).to eq 200
+      it "return status 200" do
+        expect(last_response.status).to eq 200
+      end
+  
+      it "return item data" do
+        expect(response_json).to match parse_json(item)
+      end
     end
+    
+    context "when record is not exist" do
+      let(:item_id) { "0" }
 
-    it "return item data" do
-      expect(response_json).to match parse_json(item)
+      before { get "/items/#{item_id}" }
+
+      it "return status 404" do
+        expect(last_response.status).to eq 404
+      end
+  
+      it "return item data" do
+        expect(response_json['message']).to eq "Record not found"
+      end
     end
   end
 
@@ -64,42 +80,75 @@ RSpec.describe ItemsController, type: :request do
     let!(:item) { create :item }
     let!(:item_params) { { name: "updated_name", price: 160 } }
 
-    before do
-      patch "/items/#{item.id}", item: item_params
-    end
-
-    context "when params is valid?" do
-      it "retern status 200" do
-        expect(last_response.status).to eq 200 
+    context "when record exist" do
+      before do
+        patch "/items/#{item.id}", item: item_params
       end
   
-      it "render correct data of item" do
-        expect(response_json['name']).to eq "updated_name"
-        expect(response_json['price']).to eq 160
-      end
-    end
+      context "when params is valid?" do
+        it "retern status 200" do
+          expect(last_response.status).to eq 200 
+        end
     
-    context "when params invalid" do
-      let!(:item_second) { create :item, name: "already taken" }
-      let!(:item_params) { { name: item_second.name, price: 160 } }
+        it "render correct data of item" do
+          expect(response_json['name']).to eq "updated_name"
+          expect(response_json['price']).to eq 160
+        end
+      end
+      
+      context "when params invalid" do
+        let!(:item_second) { create :item, name: "already taken" }
+        let!(:item_params) { { name: item_second.name, price: 160 } }
+  
+        it "retern status 400" do
+          expect(last_response.status).to eq 400
+        end
+    
+        it "render correct data of item" do
+          expect(response_json['message']).to eq "Record not updated"
+        end
+      end
+    end
 
-      it "retern status 400" do
-        expect(last_response.status).to eq 400
+    context "when record is not exist" do
+      let(:item_id) { "0" }
+
+      before { patch "/items/#{item_id}", item: item_params }
+
+      it "return status 404" do
+        expect(last_response.status).to eq 404
       end
   
-      it "render correct data of item" do
-        expect(response_json['message']).to eq "Record not updated"
+      it "return item data" do
+        expect(response_json['message']).to eq "Record not found"
       end
     end
   end
 
   describe "DELETE /destroy" do
-    let!(:item) { create :item }
 
-    before { delete "/items/#{item.id}" }
+    context "when record exist" do
+      let!(:item) { create :item }
 
-    it "return status 204" do
-      expect(last_response.status).to eq 204
+      before { delete "/items/#{item.id}" }
+
+      it "return status 204" do
+        expect(last_response.status).to eq 204
+      end
+    end
+    
+    context "when record is not exist" do
+      let(:item_id) { "0" }
+
+      before { delete "/items/#{item_id}" }
+
+      it "return status 404" do
+        expect(last_response.status).to eq 404
+      end
+  
+      it "return item data" do
+        expect(response_json['message']).to eq "Record not found"
+      end
     end
   end
 end
