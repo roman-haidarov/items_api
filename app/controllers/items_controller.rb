@@ -1,8 +1,9 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:index, :create]
 
   def index
-    @items = Item.all
+    @items = @user.items
 
     render_response(@items, 200)
   end
@@ -12,7 +13,7 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params)
+    @item = @user.items.new(item_params)
 
     if @item.save
       render_response(@item, 201)
@@ -42,7 +43,12 @@ class ItemsController < ApplicationController
   end
 
   def set_item
-    @item = Item.find(params[:id])
+    set_user
+    @item = @user.items.find(params[:id])
+  end
+
+  def set_user
+    @user = User.find(params[:user_id])
   end
 
   def render_response(value, status)
