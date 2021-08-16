@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     @user = User.find_by!(email: login_params[:email])
 
     if @user.password == login_params[:password]
-      render json: { token: "Здесь будет токен" }, status: 201
+      render json: { token: TokensCreator.new(@user).call }, status: 201
     else
       render json: { message: "email or password is wrong"}, status: 400
     end

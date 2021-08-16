@@ -3,16 +3,19 @@ class ItemsController < ApplicationController
   before_action :set_user, only: [:index, :create]
 
   def index
+    # can read all
     @items = @user.items
 
     render_response(@items, 200)
   end
 
   def show
+    # can read all
     render_response(@item, 200)
   end
 
   def create
+    # can create user, admin
     @item = @user.items.new(item_params)
 
     if @item.save
@@ -23,6 +26,7 @@ class ItemsController < ApplicationController
   end
 
   def update
+    # can upeate user, admin
     if @item.update(item_params)
       render_response(@item, 200)
     else
@@ -31,6 +35,7 @@ class ItemsController < ApplicationController
   end
 
   def destroy
+    # can upeate user, admin
     @item.destroy
 
     render_response("Record deleted", 204)
