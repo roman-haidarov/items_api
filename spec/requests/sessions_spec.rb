@@ -16,7 +16,21 @@ RSpec.describe SessionsController, type: :request do
       end
 
       it "when password valid" do
-        expect(response_json["token"]).to eq "Здесь будет токен"   
+        decoded_token = JWT.decode response_json['token'], nil, false
+
+        expect(decoded_token.first["email"]).to eq "antony@mail.ru"
+      end
+    end
+    
+    context "when password is wrong" do
+      let(:login_data) { { email: "antony@mail.ru", password: "4321" } }
+
+      it "return status created" do
+        expect(last_response.status).to eq 400
+      end
+
+      it "when password valid" do
+        expect(response_json["message"]).to eq "email or password is wrong"   
       end
     end
     
