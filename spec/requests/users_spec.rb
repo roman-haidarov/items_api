@@ -51,7 +51,7 @@ RSpec.describe UsersController, type: :request do
     end
 
     context "when params is valid" do
-      let!(:user_params) { { email: "viktor@mail.com", password: "777", name: "Viktor" } }
+      let!(:user_params) { { email: "viktor@mail.com", password: "777", name: "Viktor", born_years: '1991' } }
   
       it "return status 201" do
         expect(last_response.status).to eq 201

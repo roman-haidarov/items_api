@@ -1,7 +1,8 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
-
+  before_action :access_authorize, only: [:index]
+  
   def index
     # can read all
     @items = @user.items

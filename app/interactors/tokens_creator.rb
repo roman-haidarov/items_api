@@ -12,6 +12,8 @@ class TokensCreator
     JWT.encode @payload, nil, 'none'
   end
 
+  private
+
   def generate_salt
     values_arr = [ '1', '2', 'a', 'z', 'A', 'Z' ]
     salt = ''
