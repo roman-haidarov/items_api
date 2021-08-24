@@ -7,10 +7,18 @@ class ApplicationController < ActionController::Base
   private
 
   def render_not_found
-    render json: { message: "Record not found" }, status: 404 
+    render_response_application({ message: "Record not found" }, 404) 
   end
 
   def render_parse_error
-    render json: { message: "Invalid token" }, status: 400
+    render_response_application({ message: "Invalid token" }, 400)
+  end
+
+  def render_unauthorize
+    render_response_application({ message: "Access Denied"}, 403)
+  end
+
+  def render_response_application(value, status)
+    render json: value, status: status
   end
 end

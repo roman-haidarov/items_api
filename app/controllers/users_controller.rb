@@ -2,15 +2,13 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
 
   def index
-
     @users = User.all
 
-    render json: @users, status: 200
+    render_response_user(@users, 200)
   end
 
   def show
-
-    render json: @user, status: 200
+    render_response_user(@user, 200)
   end
 
   def create
@@ -18,18 +16,18 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render json: @user, status: 201
+      render_response_user(@user, 201)
     else
-      render json: { message: "User not created" }, status: 400
+      render_response_user({ message: "User not created" }, 400)
     end
   end
 
   def update
     # can update user, admin
     if @user.update(user_params)
-      render json: @user, status: 200
+      render_response_user(@user, 200)
     else
-      render json: { message: "User not updated" }, status: 400
+      render_response_user({ message: "User not updated" }, 400)
     end
   end
 
@@ -37,7 +35,7 @@ class UsersController < ApplicationController
     # can destroy admin
     @user.destroy
 
-    render json: { message: "User deleted" }, status: 204
+    render_response_user({ message: "User deleted" }, 204)
   end
 
   private
@@ -48,5 +46,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :password, :name, :born_years)
+  end
+
+  def render_response_user(value, status)
+    render json: value, status: status
   end
 end

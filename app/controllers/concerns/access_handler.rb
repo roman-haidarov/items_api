@@ -2,10 +2,8 @@ module AccessHandler
   
   extend ActiveSupport::Concern
 
-  def access_authorize
-    
+  def authenticate!
     check_bearer
-    
   end
 
   private
@@ -17,15 +15,11 @@ module AccessHandler
     unpack_token
   end
 
-  def render_unauthorize
-    render json: { message: "Access Denied"}, status: 403
-  end
-
   def unpack_token
     token = request.env["HTTP_AUTHORIZATION"].split(' ').last
     decoded_token = JWT.decode token, nil, false
 
-    verify_information(decoded_token)
+    verify_information(decoded_token.first)
   end
 
   def verify_information(user_info)

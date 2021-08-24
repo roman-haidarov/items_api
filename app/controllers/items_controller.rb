@@ -1,7 +1,9 @@
 class ItemsController < ApplicationController
+  include ItemsPolicy
+
   before_action :set_item, only: [:show, :update, :destroy]
   before_action :set_user, only: [:index, :create]
-  before_action :access_authorize, only: [:index]
+  before_action :authenticate!, only: [:create, :update, :destroy]
   
   def index
     # can read all
@@ -26,8 +28,9 @@ class ItemsController < ApplicationController
     end
   end
 
-  def update
-    # can upeate user, admin
+  def update  
+    return render_unauthorize unless can_write?(@item, @current_user)
+    
     if @item.update(item_params)
       render_response(@item, 200)
     else
@@ -36,7 +39,8 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    # can upeate user, admin
+    return render_unauthorize unless can_write?(@item, @current_user)
+    
     @item.destroy
 
     render_response("Record deleted", 204)
