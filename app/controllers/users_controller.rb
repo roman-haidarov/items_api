@@ -12,22 +12,22 @@ class UsersController < ApplicationController
   end
 
   def create
-
     @user = User.new(user_params)
+    @user.password = Base64.encode64(user_params[:password]) if user_params[:password]
 
     if @user.save
       render_response_user(@user, 201)
     else
-      render_response_user({ message: "User not created" }, 400)
+      render_response_user({ message: "User not created", errors: @user.errors.full_messages }, 400)
     end
   end
 
   def update
-    # can update user, admin
     if @user.update(user_params)
+      @user.update(password: Base64.encode64(user_params[:password])) if user_params[:password]
       render_response_user(@user, 200)
     else
-      render_response_user({ message: "User not updated" }, 400)
+      render_response_user({ message: "User not updated", errors: @user.errors.full_messages }, 400)
     end
   end
 

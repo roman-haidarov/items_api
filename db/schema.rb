@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_18_102904) do
+ActiveRecord::Schema.define(version: 2021_08_26_164953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 2021_08_18_102904) do
     t.index ["user_id"], name: "index_items_on_user_id"
   end
 
+  create_table "tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.boolean "expired", default: false, null: false
+    t.datetime "expired_in", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_tokens_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "password", null: false
@@ -35,4 +45,5 @@ ActiveRecord::Schema.define(version: 2021_08_18_102904) do
   end
 
   add_foreign_key "items", "users"
+  add_foreign_key "tokens", "users"
 end

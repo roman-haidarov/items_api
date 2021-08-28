@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  skip_before_action :verify_authenticity_token
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from JWT::DecodeError, with: :render_parse_error
 
