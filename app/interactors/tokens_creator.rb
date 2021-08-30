@@ -17,7 +17,7 @@ class TokensCreator
       expired_in: @payload[:expired_in]
     )
 
-    return token
+    return token.token
   end
 
   private

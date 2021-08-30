@@ -59,7 +59,11 @@ RSpec.describe UsersController, type: :request do
   
       it "record is created" do
         expect(response_json['email']).to eq "viktor@mail.com"
-      end      
+      end
+      
+      it "return encrypted password" do
+        expect(response_json['password']).to eq Base64.encode64("777")
+      end
     end
     
     context "when params is invalid" do
