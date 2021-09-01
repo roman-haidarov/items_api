@@ -60,9 +60,5 @@ class ItemsController < ApplicationController
   def set_user
     @user = User.find(params[:user_id])
   end
-
-  def render_response(value, status)
-    render json: value, status: status
-  end
 end
 
