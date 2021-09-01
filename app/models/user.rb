@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   has_many :items, dependent: :destroy
   has_many :tokens, dependent: :destroy
+  has_many :user_role, dependent: :destroy
+  has_many :roles, through: :user_role
 
   def password_right?(password)
     Base64.decode64(self.password) == password
