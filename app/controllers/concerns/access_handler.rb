@@ -37,8 +37,9 @@ module AccessHandler
 
   def token_valid?(token)
     token = Token.find_by(token: token)
-    return true if token && !token.expired
+    return false unless token
+    return false if token.expired
 
-    false if token.nil?
+    true
   end
 end
