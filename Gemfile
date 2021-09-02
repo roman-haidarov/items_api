@@ -27,6 +27,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'rspec-rails'
 gem 'faker'
 gem 'jwt'
+gem 'interactor'
+gem 'whenever', require: false
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
